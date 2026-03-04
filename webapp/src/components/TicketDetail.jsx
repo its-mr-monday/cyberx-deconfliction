@@ -9,6 +9,7 @@ export default function TicketDetail({ ticket, onClose, onUpdated }) {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
+  const isBlue = user?.role === 'blue';
   const canReview = user?.role === 'red';
 
   const handleSave = async () => {
@@ -32,7 +33,7 @@ export default function TicketDetail({ ticket, onClose, onUpdated }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Ticket #{ticket.id}</h2>
+          <h2>{ticket.case_number}</h2>
           <button onClick={onClose} className="btn-close">&times;</button>
         </div>
 
@@ -71,71 +72,75 @@ export default function TicketDetail({ ticket, onClose, onUpdated }) {
           </div>
         </div>
 
-        <hr />
+        {!isBlue && (
+          <>
+            <hr />
 
-        <h3>Red Team Review</h3>
+            <h3>Red Team Review</h3>
 
-        {canReview ? (
-          <div className="review-form">
-            <div className="hit-miss-toggle">
-              <button
-                className={`btn ${isHit === true ? 'btn-hit active' : 'btn-outline'}`}
-                onClick={() => setIsHit(true)}
-                type="button"
-              >
-                Hit
-              </button>
-              <button
-                className={`btn ${isHit === false ? 'btn-miss active' : 'btn-outline'}`}
-                onClick={() => setIsHit(false)}
-                type="button"
-              >
-                Miss
-              </button>
-            </div>
+            {canReview ? (
+              <div className="review-form">
+                <div className="hit-miss-toggle">
+                  <button
+                    className={`btn ${isHit === true ? 'btn-hit active' : 'btn-outline'}`}
+                    onClick={() => setIsHit(true)}
+                    type="button"
+                  >
+                    Hit
+                  </button>
+                  <button
+                    className={`btn ${isHit === false ? 'btn-miss active' : 'btn-outline'}`}
+                    onClick={() => setIsHit(false)}
+                    type="button"
+                  >
+                    Miss
+                  </button>
+                </div>
 
-            <div className="form-group">
-              <label>Comments</label>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                rows={3}
-                placeholder="Add review comments..."
-              />
-            </div>
+                <div className="form-group">
+                  <label>Comments</label>
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    rows={3}
+                    placeholder="Add review comments..."
+                  />
+                </div>
 
-            <button
-              onClick={handleSave}
-              className="btn btn-primary"
-              disabled={saving || isHit === null || isHit === undefined}
-            >
-              {saving ? 'Saving...' : 'Save Review'}
-            </button>
-          </div>
-        ) : (
-          <div className="review-readonly">
-            {ticket.is_hit === null || ticket.is_hit === undefined ? (
-              <p className="status-pending-text">Awaiting Red Team review</p>
+                <button
+                  onClick={handleSave}
+                  className="btn btn-primary"
+                  disabled={saving || isHit === null || isHit === undefined}
+                >
+                  {saving ? 'Saving...' : 'Save Review'}
+                </button>
+              </div>
             ) : (
-              <>
-                <p>
-                  <strong>Verdict:</strong>{' '}
-                  <span className={ticket.is_hit ? 'text-hit' : 'text-miss'}>
-                    {ticket.is_hit ? 'HIT' : 'MISS'}
-                  </span>
-                </p>
-                {ticket.red_team_comment && (
-                  <p><strong>Comment:</strong> {ticket.red_team_comment}</p>
+              <div className="review-readonly">
+                {ticket.is_hit === null || ticket.is_hit === undefined ? (
+                  <p className="status-pending-text">Awaiting Red Team review</p>
+                ) : (
+                  <>
+                    <p>
+                      <strong>Verdict:</strong>{' '}
+                      <span className={ticket.is_hit ? 'text-hit' : 'text-miss'}>
+                        {ticket.is_hit ? 'HIT' : 'MISS'}
+                      </span>
+                    </p>
+                    {ticket.red_team_comment && (
+                      <p><strong>Comment:</strong> {ticket.red_team_comment}</p>
+                    )}
+                    {ticket.reviewed_by && (
+                      <p className="reviewed-meta">
+                        Reviewed by {ticket.reviewed_by.name} at{' '}
+                        {new Date(ticket.reviewed_at).toLocaleString()}
+                      </p>
+                    )}
+                  </>
                 )}
-                {ticket.reviewed_by && (
-                  <p className="reviewed-meta">
-                    Reviewed by {ticket.reviewed_by.name} at{' '}
-                    {new Date(ticket.reviewed_at).toLocaleString()}
-                  </p>
-                )}
-              </>
+              </div>
             )}
-          </div>
+          </>
         )}
       </div>
     </div>

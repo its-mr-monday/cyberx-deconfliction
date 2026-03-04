@@ -25,7 +25,7 @@ export default function BlueDashboard() {
 
       <section className="my-tickets">
         <h2>My Submitted Reports</h2>
-        <TicketTable tickets={tickets} onSelect={setSelected} />
+        <TicketTable tickets={tickets} onSelect={setSelected} hideStatus />
       </section>
 
       {selected && (

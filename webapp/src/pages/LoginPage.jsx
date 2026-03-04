@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const ROLE_HOME = {
@@ -45,7 +45,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="user@cdx.local"
+              placeholder="user@cyberx.local"
               required
             />
           </div>
@@ -66,7 +66,7 @@ export default function LoginPage() {
         </form>
 
         <p className="auth-link">
-          Don't have an account? <Link to="/register">Register</Link>
+          Need an account? Contact your White Cell for an invite link.
         </p>
       </div>
     </div>

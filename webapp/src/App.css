@@ -292,6 +292,21 @@ body {
   font-size: 1.2rem;
 }
 
+.datetime-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.datetime-row input {
+  flex: 1;
+}
+
+.btn-now {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* === Tables === */
 .table-wrapper {
   overflow-x: auto;
@@ -614,4 +629,281 @@ hr {
   border-radius: 4px;
   color: var(--text);
   font-size: 0.85rem;
+}
+
+/* === Invites === */
+.invite-management {
+  margin-top: 1rem;
+}
+
+.invite-create {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.invite-create h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.invite-create-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.invite-create-row select {
+  padding: 0.6rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.invite-link-result {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.invite-link-input {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-family: 'SF Mono', 'Consolas', monospace;
+}
+
+.invite-role-banner {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.invite-role-blue {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--primary);
+}
+
+.invite-role-red {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--red);
+}
+
+.invite-role-white {
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: var(--purple);
+}
+
+/* === Konami Easter Egg === */
+.konami-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.konami-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);
+}
+
+.konami-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.konami-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 2px;
+  font-family: 'SF Mono', 'Consolas', monospace;
+}
+
+.dino-canvas {
+  display: block;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.konami-flag {
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 6px;
+}
+
+.konami-flag code {
+  color: var(--amber);
+  font-size: 0.9rem;
+  font-family: 'SF Mono', 'Consolas', monospace;
+}
+
+.konami-hint {
+  margin-top: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* === Dino Game Leaderboard === */
+.dino-game-area {
+  position: relative;
+}
+
+.arcade-gameover {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.arcade-gameover-title {
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 4px;
+  margin-bottom: 0.25rem;
+}
+
+.arcade-score {
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 1.1rem;
+  color: var(--green);
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.arcade-prompt {
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.arcade-enter-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.arcade-nickname-input {
+  width: 18ch;
+  text-align: center;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: var(--bg-input);
+  border: 2px solid var(--green);
+  border-radius: 4px;
+  color: var(--green);
+  padding: 0.4rem 0.6rem;
+  caret-color: var(--green);
+}
+
+.arcade-nickname-input::placeholder {
+  color: var(--border);
+  font-weight: 400;
+}
+
+.arcade-nickname-input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+.arcade-submit-btn {
+  font-family: 'SF Mono', 'Consolas', monospace;
+  letter-spacing: 1px;
+}
+
+.arcade-leaderboard {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.arcade-leaderboard-title {
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: 3px;
+  margin-bottom: 0.75rem;
+}
+
+.arcade-scores-table {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-family: 'SF Mono', 'Consolas', monospace;
+}
+
+.arcade-scores-table th {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.arcade-scores-table td {
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 0.35rem 0.75rem;
+  border-bottom: 1px solid rgba(46, 49, 64, 0.5);
+}
+
+.arcade-scores-table tr.arcade-highlight td {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.arcade-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 1rem !important;
+}
+
+.arcade-play-again {
+  margin-top: 1rem;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  animation: arcade-blink 1s step-end infinite;
+}
+
+@keyframes arcade-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }

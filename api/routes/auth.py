@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import bcrypt
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (
@@ -6,9 +8,17 @@ from flask_jwt_extended import (
     jwt_required,
 )
 
-from database.models import Role, User, db
+from database.models import InviteToken, Role, User, db
 
 auth_bp = Blueprint('auth', __name__)
+
+
+@auth_bp.route('/invite/<token>', methods=['GET'])
+def validate_invite(token):
+    invite = InviteToken.query.filter_by(token=token).first()
+    if not invite or invite.used_by_id is not None:
+        return jsonify(error='Invalid or expired invite'), 404
+    return jsonify(valid=True, role=invite.role.value)
 
 
 @auth_bp.route('/register', methods=['POST'])
@@ -18,23 +28,26 @@ def register():
     name = data.get('name', '').strip()
     email = data.get('email', '').strip().lower()
     password = data.get('password', '')
-    role_str = data.get('role', '').strip().lower()
+    invite_token = data.get('invite_token', '').strip()
 
-    if not all([name, email, password, role_str]):
+    if not all([name, email, password, invite_token]):
         return jsonify(error='All fields are required'), 400
 
-    try:
-        role = Role(role_str)
-    except ValueError:
-        return jsonify(error='Invalid role. Must be red, blue, or white'), 400
+    invite = InviteToken.query.filter_by(token=invite_token).first()
+    if not invite or invite.used_by_id is not None:
+        return jsonify(error='Invalid or expired invite'), 400
 
     if User.query.filter_by(email=email).first():
         return jsonify(error='Email already registered'), 409
 
     password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
-    user = User(name=name, email=email, password_hash=password_hash, role=role)
+    user = User(name=name, email=email, password_hash=password_hash, role=invite.role)
     db.session.add(user)
+    db.session.flush()
+
+    invite.used_by_id = user.id
+    invite.used_at = datetime.now(timezone.utc)
     db.session.commit()
 
     token = create_access_token(

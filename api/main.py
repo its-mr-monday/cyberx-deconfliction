@@ -19,10 +19,12 @@ def create_app():
     from routes.auth import auth_bp
     from routes.tickets import tickets_bp
     from routes.admin import admin_bp
+    from routes.leaderboard import leaderboard_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(tickets_bp, url_prefix='/api/tickets')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
+    app.register_blueprint(leaderboard_bp, url_prefix='/api/leaderboard')
 
     with app.app_context():
         db.create_all()
@@ -44,9 +46,9 @@ def _seed_defaults():
         return
 
     defaults = [
-        ('White Cell Admin', 'white@cdx.local', 'admin123', Role.WHITE),
-        ('Red Cell', 'red@cdx.local', 'red123', Role.RED),
-        ('Blue Team', 'blue@cdx.local', 'blue123', Role.BLUE),
+        ('White Cell Admin', 'white@cyberx.local', 'admin123', Role.WHITE),
+        ('Red Cell', 'red@cyberx.local', 'red123', Role.RED),
+        ('Blue Team', 'blue@cyberx.local', 'blue123', Role.BLUE),
     ]
 
     for name, email, password, role in defaults:
@@ -54,7 +56,7 @@ def _seed_defaults():
         db.session.add(User(name=name, email=email, password_hash=pw_hash, role=role))
 
     db.session.commit()
-    print('[SEED] Default accounts created: white@cdx.local, red@cdx.local, blue@cdx.local')
+    print('[SEED] Default accounts created: white@cyberx.local, red@cyberx.local, blue@cyberx.local')
 
 
 if __name__ == '__main__':

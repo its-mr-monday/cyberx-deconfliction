@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import BlueDashboard from './pages/BlueDashboard';
 import RedDashboard from './pages/RedDashboard';
 import WhiteDashboard from './pages/WhiteDashboard';
+import KonamiEgg from './components/KonamiEgg';
 
 const ROLE_HOME = {
   blue: '/blue',
@@ -24,11 +25,12 @@ function RoleRedirect() {
 export default function App() {
   return (
     <>
+      <KonamiEgg />
       <Navbar />
       <main className="main-content">
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/register/:token" element={<RegisterPage />} />
           <Route
             path="/blue"
             element={

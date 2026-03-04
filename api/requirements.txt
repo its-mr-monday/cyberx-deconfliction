@@ -5,3 +5,4 @@ flask-jwt-extended
 psycopg2-binary
 bcrypt
 gunicorn
+watchdog

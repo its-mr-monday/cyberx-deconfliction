@@ -9,9 +9,23 @@ from middleware.auth import role_required
 tickets_bp = Blueprint('tickets', __name__)
 
 
-def ticket_to_dict(ticket):
-    return {
+def _generate_case_number():
+    year = datetime.now(timezone.utc).year
+    prefix = f'CX-{year}-'
+    last = (
+        DeconflictionTicket.query
+        .filter(DeconflictionTicket.case_number.like(f'{prefix}%'))
+        .order_by(DeconflictionTicket.case_number.desc())
+        .first()
+    )
+    seq = int(last.case_number.split('-')[-1]) + 1 if last else 1
+    return f'{prefix}{seq:04d}'
+
+
+def ticket_to_dict(ticket, hide_review=False):
+    data = {
         'id': ticket.id,
+        'case_number': ticket.case_number,
         'submitted_by': {
             'id': ticket.submitted_by.id,
             'name': ticket.submitted_by.name,
@@ -21,16 +35,20 @@ def ticket_to_dict(ticket):
         'source_ips': [ip.strip() for ip in ticket.source_ips.split(',') if ip.strip()],
         'affected_hosts': [h.strip() for h in ticket.affected_hosts.split(',') if h.strip()],
         'actions_taken': ticket.actions_taken,
-        'is_hit': ticket.is_hit,
-        'red_team_comment': ticket.red_team_comment,
-        'reviewed_by': {
-            'id': ticket.reviewed_by.id,
-            'name': ticket.reviewed_by.name,
-        } if ticket.reviewed_by else None,
-        'reviewed_at': ticket.reviewed_at.isoformat() if ticket.reviewed_at else None,
         'created_at': ticket.created_at.isoformat(),
         'updated_at': ticket.updated_at.isoformat() if ticket.updated_at else None,
     }
+
+    if not hide_review:
+        data['is_hit'] = ticket.is_hit
+        data['red_team_comment'] = ticket.red_team_comment
+        data['reviewed_by'] = {
+            'id': ticket.reviewed_by.id,
+            'name': ticket.reviewed_by.name,
+        } if ticket.reviewed_by else None
+        data['reviewed_at'] = ticket.reviewed_at.isoformat() if ticket.reviewed_at else None
+
+    return data
 
 
 @tickets_bp.route('', methods=['POST'])
@@ -59,6 +77,7 @@ def create_ticket():
 
     user_id = get_jwt_identity()
     ticket = DeconflictionTicket(
+        case_number=_generate_case_number(),
         submitted_by_id=int(user_id),
         incident_datetime=incident_dt,
         description=data['description'].strip(),
@@ -69,7 +88,7 @@ def create_ticket():
     db.session.add(ticket)
     db.session.commit()
 
-    return jsonify(ticket_to_dict(ticket)), 201
+    return jsonify(ticket_to_dict(ticket, hide_review=True)), 201
 
 
 @tickets_bp.route('', methods=['GET'])
@@ -121,7 +140,7 @@ def my_tickets():
         .order_by(DeconflictionTicket.created_at.desc())
         .all()
     )
-    return jsonify([ticket_to_dict(t) for t in tickets])
+    return jsonify([ticket_to_dict(t, hide_review=True) for t in tickets])
 
 
 @tickets_bp.route('/<int:ticket_id>', methods=['GET'])
@@ -136,7 +155,8 @@ def get_ticket(ticket_id):
     if role == Role.BLUE.value and ticket.submitted_by_id != int(user_id):
         return jsonify(error='Access denied'), 403
 
-    return jsonify(ticket_to_dict(ticket))
+    hide_review = role == Role.BLUE.value
+    return jsonify(ticket_to_dict(ticket, hide_review=hide_review))
 
 
 @tickets_bp.route('/<int:ticket_id>/review', methods=['PATCH'])

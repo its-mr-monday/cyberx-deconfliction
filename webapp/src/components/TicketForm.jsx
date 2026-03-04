@@ -29,8 +29,8 @@ export default function TicketForm({ onSubmitted }) {
         affected_hosts: form.affected_hosts.split('\n').map(s => s.trim()).filter(Boolean),
       };
 
-      await api.post('/api/tickets', payload);
-      setMessage({ type: 'success', text: 'Deconfliction report submitted successfully.' });
+      const res = await api.post('/api/tickets', payload);
+      setMessage({ type: 'success', text: `Report submitted — Case ${res.data.case_number}` });
       setForm({
         incident_datetime: new Date().toISOString().slice(0, 16),
         description: '',
@@ -56,13 +56,22 @@ export default function TicketForm({ onSubmitted }) {
 
       <div className="form-group">
         <label>Date/Time of Incident</label>
-        <input
-          type="datetime-local"
-          name="incident_datetime"
-          value={form.incident_datetime}
-          onChange={handleChange}
-          required
-        />
+        <div className="datetime-row">
+          <input
+            type="datetime-local"
+            name="incident_datetime"
+            value={form.incident_datetime}
+            onChange={handleChange}
+            required
+          />
+          <button
+            type="button"
+            className="btn btn-outline btn-now"
+            onClick={() => setForm({ ...form, incident_datetime: new Date().toISOString().slice(0, 16) })}
+          >
+            Now
+          </button>
+        </div>
       </div>
 
       <div className="form-group">
